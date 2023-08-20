@@ -24,7 +24,7 @@ struct CrewList: View {
             .onAppear{
                 viewModel.loadCrew()
             }
-            .navigationTitle("Launches")
+            .navigationTitle("Crew")
             .navigationBarItems(leading: Image("SpaceXLogo").resizable().aspectRatio(contentMode: .fit).frame(maxWidth: 100).tint(Color("Inverted")))
         }
     }
