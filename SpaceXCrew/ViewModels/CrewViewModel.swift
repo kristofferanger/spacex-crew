@@ -26,7 +26,7 @@ class CrewViewModel: ObservableObject {
     }
     
     // MARK: - private stuff
-    private let coreDataManager = CoreDataManager.instance
+    private let manager = CoreDataManager.instance
     private let crewDataService: CrewDataServiceProtocol
     private let launchesDataService: LaunchesDataServiceProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -42,7 +42,7 @@ class CrewViewModel: ObservableObject {
                 }
                 let request = NSFetchRequest<CrewMemberEntity>(entityName: "CrewMemberEntity")
                 do {
-                    try self?.crew = (self?.coreDataManager.context.fetch(request).map({ entity in
+                    try self?.crew = (self?.manager.context.fetch(request).map({ entity in
                         return CrewMember(id: entity.id!, name: entity.name!, agency: entity.agency!, launches: entity.launches!, image: entity.image, status: entity.status)
                     }))!
                 }
