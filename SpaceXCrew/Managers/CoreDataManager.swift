@@ -32,4 +32,30 @@ class CoreDataManager {
             print("Error saving to Core Data \(error.localizedDescription)")
         }
     }
+    
+    func fetchOrCreateEntities<Entity, IdentifiableCollection>(ofType type: Entity.Type, matchingData data: IdentifiableCollection, entityUpdate: (Entity, IdentifiableCollection.Element) -> Void) where Entity : NSManagedObject, IdentifiableCollection: Collection, IdentifiableCollection.Element: Identifiable {
+        
+        for element in data {
+            self.fetchOrCreateEntity(id: element.id, ofType: type) { entity in
+                entityUpdate(entity, element)
+            }
+        }
+    }
+    
+    func fetchOrCreateEntity<Entity: NSManagedObject>(id: Any, ofType type: Entity.Type, entityUpdate: (Entity) -> Void) {
+        // make fetch request to get existing entity, ie item in DB
+        let request = NSFetchRequest<Entity>(entityName: type.description())
+        request.predicate = NSPredicate(format: "id == %@", "\(id)")
+        // fetch or create
+        if let result = try? context.fetch(request), let storedEntity = result.first{
+            // return fetched entity for updating vars
+            entityUpdate(storedEntity)
+        }
+        else {
+            // return created entity for setting vars
+            entityUpdate(Entity(context: context))
+        }
+        // save entity
+        save()
+    }
 }

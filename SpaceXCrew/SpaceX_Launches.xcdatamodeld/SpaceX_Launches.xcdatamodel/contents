@@ -12,7 +12,9 @@
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="LaunchEntity" representedClassName="LaunchEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="id" optional="YES" attributeType="String"/>
-        <attribute name="links" optional="YES" attributeType="Transformable" customClassName="Dictionary&lt;String, Any&gt;"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="rocket" attributeType="String"/>
+        <attribute name="success" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
 </model>

@@ -27,3 +27,27 @@ struct CrewMember: Codable, Identifiable {
     let image: String?
     let status: String?
 }
+
+// for passing data to corresponding core data entity
+extension CrewMember {
+    func update(entity: CrewMemberEntity) {
+        entity.id = self.id
+        entity.name = self.name
+        entity.agency = self.agency
+        entity.launches = self.launches
+        entity.image = self.image
+    }
+    
+    // demand that the non-optional properties
+    // is not nil, ie: id, name, agency, launches
+    // otherwise fail the init
+    init?(entity: CrewMemberEntity) {
+        guard let id = entity.id, let name = entity.name, let agency = entity.agency, let launches = entity.launches else { return nil }
+        self.id = id
+        self.name = name
+        self.agency = agency
+        self.launches = launches
+        self.image = entity.image
+        self.status = entity.status
+    }
+}

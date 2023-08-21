@@ -82,26 +82,55 @@ import Foundation
  "id": "5eb87cd9ffd86e000604b32a"
  */
 
-struct Launch: Codable {
+struct Launch: Codable, Identifiable {
     
     let id: String
     let name: String
     let success: Bool
     let rocket: String
-    let details: String
-    let upcoming: Bool
+    let details: String?
+    let upcoming: Bool?
+    let links: Links?
     
     struct Links: Codable {
-        let webcast: String
-        let wikipedia: String
-        let flickr: Flickr
+        let webcast: String?
+        let wikipedia: String?
+        let flickr: Flickr?
     }
     
     struct Flickr: Codable {
-        let original: [String]
+        let original: [String]?
     }
 }
 
 
+
+
+extension Launch {
+
+    // demand that the non-optional properties
+    // is not nil, ie: id, name, success, rocket
+    // otherwise fail the init
+    init?(entity: LaunchEntity) {
+        
+        guard let id = entity.id, let name = entity.name, let rocket = entity.rocket else { return nil }
+        
+        self.id = id
+        self.name = name
+        self.success = entity.success
+        self.rocket = rocket
+        self.details = nil
+        self.upcoming = nil
+        self.links = nil
+    }
+    
+    func update(entity: LaunchEntity) {
+        entity.rocket = self.rocket
+        entity.success = self.success
+        entity.name = self.name
+        entity.id = self.id
+    }
+    
+}
 
 

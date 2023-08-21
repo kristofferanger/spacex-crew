@@ -37,5 +37,29 @@ class LaunchesDataService: LaunchesDataServiceProtocol {
     }
     
     private var launchesSubscription: AnyCancellable?
+    
+    private func addItem<Item: Codable>(_ item: Item) {
+        
+        var crewMember: CrewMemberEntity
+//
+//        let request = NSFetchRequest<CrewMemberEntity>(entityName: "CrewMemberEntity")
+//        request.predicate = NSPredicate(format: "id == %@", member.id)
+//        if let result = try? coreDataManager.context.fetch(request), let entity = result.first {
+//            crewMember = entity
+//        }
+//
+//        else {
+//            crewMember = CrewMemberEntity(context: coreDataManager.context)
+//            crewMember.id = member.id
+//        }
+//
+//        crewMember.name = member.name
+//        crewMember.id = member.id
+//        crewMember.agency = member.agency
+//        crewMember.launches = member.launches
+//        crewMember.image = member.image
+//
+//        coreDataManager.save()
+    }
 
 }
