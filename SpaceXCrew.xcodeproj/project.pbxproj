@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C928085F2A9346E200B92836 /* CrewDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C928085E2A9346E200B92836 /* CrewDataService.swift */; };
 		C99950392A9250AC000D8EFA /* SpaceXCrewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99950382A9250AC000D8EFA /* SpaceXCrewApp.swift */; };
 		C999503D2A9250AE000D8EFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C999503C2A9250AE000D8EFA /* Assets.xcassets */; };
 		C99950402A9250AE000D8EFA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C999503F2A9250AE000D8EFA /* Preview Assets.xcassets */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C928085E2A9346E200B92836 /* CrewDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewDataService.swift; sourceTree = "<group>"; };
 		C99950352A9250AC000D8EFA /* SpaceXCrew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceXCrew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99950382A9250AC000D8EFA /* SpaceXCrewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceXCrewApp.swift; sourceTree = "<group>"; };
 		C999503C2A9250AE000D8EFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				C99950752A92524C000D8EFA /* CoreDataManager.swift */,
+				C928085E2A9346E200B92836 /* CrewDataService.swift */,
 				C99950762A92524C000D8EFA /* LaunchesDataService.swift */,
 				C99950732A92524C000D8EFA /* MockDataService.swift */,
 				C99950742A92524C000D8EFA /* NetworkManager.swift */,
@@ -328,6 +331,7 @@
 				C999506C2A9251D9000D8EFA /* CrewMember.swift in Sources */,
 				C999506D2A9251D9000D8EFA /* Launch.swift in Sources */,
 				C999506E2A9251D9000D8EFA /* Rocket.swift in Sources */,
+				C928085F2A9346E200B92836 /* CrewDataService.swift in Sources */,
 				C999507A2A92524D000D8EFA /* LaunchesDataService.swift in Sources */,
 				C99950782A92524D000D8EFA /* NetworkManager.swift in Sources */,
 				C99950392A9250AC000D8EFA /* SpaceXCrewApp.swift in Sources */,

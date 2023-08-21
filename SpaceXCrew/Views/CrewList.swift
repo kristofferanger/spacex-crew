@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CrewList: View {
-    @StateObject private var viewModel = CrewViewModel(dataService: LaunchesDataService())
+    @StateObject private var viewModel = CrewViewModel(dataService: CrewDataService())
     @State private var searchText = ""
 
     var body: some View {

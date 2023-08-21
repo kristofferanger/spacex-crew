@@ -8,17 +8,20 @@
 import Foundation
 import Combine
 
-class MockDataService: LaunchesDataServiceProtocol {
+class MockDataService: CrewDataServiceProtocol, LaunchesDataServiceProtocol {
     
     @Published var crew = [CrewMember] ()
+    @Published var launches = [Launch] ()
     
     var crewPublisher: Published<[CrewMember]>.Publisher { $crew }
-    
-    private var crewSubscription: AnyCancellable?
+    var launchesPublisher: Published<[Launch]>.Publisher { $launches }
 
+    private var crewSubscription: AnyCancellable?
+    private var launchesSubscription: AnyCancellable?
     
     init() {
         loadCrew()
+        loadLaunches()
     }
     
     func loadCrew() {
@@ -28,6 +31,17 @@ class MockDataService: LaunchesDataServiceProtocol {
             .delay(for: 1.5, scheduler: RunLoop.main)
             .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] receivedData in
                 self?.crew = receivedData
+                self?.crewSubscription?.cancel()
+            })
+    }
+    
+    func loadLaunches() {
+        let data = MockDataService.launchesJSON.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+        launchesSubscription = Just(data)
+            .decode(type: [Launch].self, decoder: NetworkingManager.defaultDecoder())
+            .delay(for: 1.5, scheduler: RunLoop.main)
+            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] receivedData in
+                self?.launches = receivedData
                 self?.crewSubscription?.cancel()
             })
     }

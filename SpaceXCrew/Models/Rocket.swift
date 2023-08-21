@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct Rocket: Codable {
+    let id: String
+}

@@ -14,38 +14,44 @@ class CrewViewModel: ObservableObject {
         
     @Published var crew = [CrewMember]()
         
-    init(dataService: LaunchesDataServiceProtocol) {
+    init(dataService: CrewDataServiceProtocol) {
         self.crewDataService = dataService
+        self.launchesDataService = LaunchesDataService()
         addSubscribers()
     }
     
     func loadCrew() {
+        // delegate to data service to load data
         crewDataService.loadCrew()
     }
     
     // MARK: - private stuff
-    private let manager = CoreDataManager.instance
-    private let crewDataService: LaunchesDataServiceProtocol
+    private let coreDataManager = CoreDataManager.instance
+    private let crewDataService: CrewDataServiceProtocol
+    private let launchesDataService: LaunchesDataServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     private var activeFiltersIds = Set<Int>()
 
-    // receive podpcasts and genres
+    // receive crew and launches
     private func addSubscribers() {
-        crewDataService.crewPublisher
-            .sink{ [weak self] crew in
-                
+        crewDataService.crewPublisher.combineLatest(launchesDataService.launchesPublisher)
+            .sink{ [weak self] crew, launches in
+                            
                 for member in crew {
                     self?.addItem(member)
                 }
                 let request = NSFetchRequest<CrewMemberEntity>(entityName: "CrewMemberEntity")
                 do {
-                    try self?.crew = (self?.manager.context.fetch(request).map({ entity in
+                    try self?.crew = (self?.coreDataManager.context.fetch(request).map({ entity in
                         return CrewMember(id: entity.id!, name: entity.name!, agency: entity.agency!, launches: entity.launches!, image: entity.image, status: entity.status)
                     }))!
                 }
                 catch let error {
                     print("Error \(error)")
                 }
+                
+                self?.crew = try! (self?.manager.context.fetch(request).map({ entity in
+                    return CrewMember(id: entity.id!, name: entity.name!, agency: entity.agency!, launches: entity.launches!, image: entity.image, status: entity.status)}))!
                 
                     
                 

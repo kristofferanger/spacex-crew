@@ -10,32 +10,32 @@ import Combine
 
 protocol LaunchesDataServiceProtocol {
     // subscribe vars
-    var crewPublisher: Published<[CrewMember]>.Publisher { get }
+    var launchesPublisher: Published<[Launch]>.Publisher { get }
     // method to ask for updates
-    func loadCrew()
+    func loadLaunches()
 }
 
 class LaunchesDataService: LaunchesDataServiceProtocol {
-    
-    @Published var crew: [CrewMember] = []
-
-    var crewPublisher: Published<[CrewMember]>.Publisher { $crew }
-    
-    private var crewSubscription: AnyCancellable?
-    
+  
+    @Published var launches: [Launch] = []
+    var launchesPublisher: Published<[Launch]>.Publisher { $launches }
+        
     init() {
-        // load crew
-        loadCrew()
+        // load launches
+        loadLaunches()
     }
-    
-    func loadCrew() {
+        
+    func loadLaunches() {
         guard let url = NetworkingManager.api.url(endpoint: "/crew") else { return }
-        crewSubscription = NetworkingManager.download(url: url)
-            .decode(type: [CrewMember].self, decoder: NetworkingManager.defaultDecoder())
+        launchesSubscription = NetworkingManager.download(url: url)
+            .decode(type: [Launch].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] crew in
-                self?.crew = crew
-                self?.crewSubscription?.cancel()
+            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] value in
+                self?.launches = value
+                self?.launchesSubscription?.cancel()
             })
     }
+    
+    private var launchesSubscription: AnyCancellable?
+
 }
