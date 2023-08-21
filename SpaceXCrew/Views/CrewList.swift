@@ -9,11 +9,12 @@ import SwiftUI
 
 struct CrewList: View {
     @StateObject private var viewModel = CrewViewModel(dataService: LaunchesDataService())
+    @State private var searchText = ""
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
-                ForEach(viewModel.crew) { crewMember in
+                ForEach(searchResults) { crewMember in
                     NavigationLink {
                         Text(crewMember.name)
                     } label: {
@@ -25,7 +26,26 @@ struct CrewList: View {
                 viewModel.loadCrew()
             }
             .navigationTitle("Crew")
-            .navigationBarItems(leading: Image("SpaceXLogo").resizable().aspectRatio(contentMode: .fit).frame(maxWidth: 100).tint(Color("Inverted")))
+            .navigationBarItems(leading: logo)
+        }
+        .searchable(text: $searchText)
+    }
+    
+    var logo: some View {
+        return Image("SpaceXLogo")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: 100)
+            .tint(Color("Inverted"))
+    }
+    
+    var searchResults: [CrewMember] {
+        if searchText.isEmpty {
+            return viewModel.crew
+        }
+        else {
+            return viewModel.crew.filter { $0.name.lowercased().contains(searchText.lowercased()) || $0.agency.lowercased().contains(searchText.lowercased())
+            }
         }
     }
 }

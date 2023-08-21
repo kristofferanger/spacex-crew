@@ -11,9 +11,7 @@ import SwiftUI
 import CoreData
 
 class CrewViewModel: ObservableObject {
-    
-    let manager = CoreDataManager.instance
-    
+        
     @Published var crew = [CrewMember]()
         
     init(dataService: LaunchesDataServiceProtocol) {
@@ -26,6 +24,7 @@ class CrewViewModel: ObservableObject {
     }
     
     // MARK: - private stuff
+    private let manager = CoreDataManager.instance
     private let crewDataService: LaunchesDataServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     private var activeFiltersIds = Set<Int>()
@@ -34,7 +33,7 @@ class CrewViewModel: ObservableObject {
     private func addSubscribers() {
         crewDataService.crewPublisher
             .sink{ [weak self] crew in
-                // self?.crew = crew
+                
                 for member in crew {
                     self?.addItem(member)
                 }
@@ -55,14 +54,26 @@ class CrewViewModel: ObservableObject {
     }
     
     private func addItem(_ member: CrewMember) {
-        withAnimation {
-            let newItem = CrewMemberEntity(context: manager.context)
-            newItem.name = member.name
-            newItem.id = member.id
-            newItem.agency = member.agency
-            newItem.launches = member.launches
-            newItem.image = member.image
-            manager.save()
+        
+        var crewMember: CrewMemberEntity
+        
+        let request = NSFetchRequest<CrewMemberEntity>(entityName: "CrewMemberEntity")
+        request.predicate = NSPredicate(format: "id == %@", member.id)
+        if let result = try? manager.context.fetch(request), let entity = result.first {
+            crewMember = entity
         }
+        
+        else {
+            crewMember = CrewMemberEntity(context: manager.context)
+            crewMember.id = member.id
+        }
+        
+        crewMember.name = member.name
+        crewMember.id = member.id
+        crewMember.agency = member.agency
+        crewMember.launches = member.launches
+        crewMember.image = member.image
+                
+        manager.save()
     }
 }
