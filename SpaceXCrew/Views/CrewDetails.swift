@@ -13,15 +13,15 @@ struct CrewDetails: View {
     
     var body: some View {
         ScrollView {
-            VStack() {
+            VStack(alignment: .leading){
                 ImageView(url: viewModel.crewMember.image)
                     .scaledToFill()
-                    .frame(height: 360)
+                    .frame(maxHeight: 360, alignment: .center)
                     .clipShape(Rectangle())
-                VStack() {
+                VStack(alignment: .leading) {
                     Text(viewModel.crewMember.agency)
                         .font(.headline)
-                    List {
+                    VStack {
                         ForEach(viewModel.launches) { launch in
                             Text(launch.name)
                         }
