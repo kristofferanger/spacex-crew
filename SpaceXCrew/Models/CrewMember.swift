@@ -28,8 +28,9 @@ struct CrewMember: Codable, Identifiable {
     let status: String?
 }
 
-// for passing data to corresponding core data entity
+// MARK: - Core data stuff
 extension CrewMember {
+    // for passing data to corresponding core data entity
     func update(entity: CrewMemberEntity) {
         entity.id = self.id
         entity.name = self.name

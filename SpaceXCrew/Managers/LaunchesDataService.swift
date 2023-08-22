@@ -10,15 +10,17 @@ import Combine
 
 protocol LaunchesDataServiceProtocol {
     // subscribe vars
-    var launchesPublisher: Published<[Launch]>.Publisher { get }
+    var launchesPublisher: Published<Result<[Launch], Error>>.Publisher { get }
     // method to ask for updates
     func loadLaunches()
 }
 
 class LaunchesDataService: LaunchesDataServiceProtocol {
   
-    @Published var launches: [Launch] = []
-    var launchesPublisher: Published<[Launch]>.Publisher { $launches }
+    @Published var launches: Result<[Launch], Error> = .success([])
+    @Published var error: Error? = nil
+    
+    var launchesPublisher: Published<Result<[Launch], Error>>.Publisher { $launches }
         
     init() {
         // load launches
@@ -30,8 +32,12 @@ class LaunchesDataService: LaunchesDataServiceProtocol {
         launchesSubscription = NetworkingManager.download(url: url)
             .decode(type: [Launch].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] value in
-                self?.launches = value
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.launches = .failure(error)
+                }
+            }, receiveValue: { [weak self] value in
+                self?.launches = .success(value)
                 self?.launchesSubscription?.cancel()
             })
     }

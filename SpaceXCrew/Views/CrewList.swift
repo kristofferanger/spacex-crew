@@ -36,7 +36,7 @@ struct CrewList: View {
     func alert(error: Error) -> Alert {
         let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {
             // try load items again on error dismiss
-            viewModel.loadCrew()
+            viewModel.loadCrew(forceDownload: true)
         })
         return alert
     }

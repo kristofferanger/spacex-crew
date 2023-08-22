@@ -21,11 +21,15 @@ class CrewViewModel: ObservableObject {
         addSubscribers()
     }
     
-    func loadCrew() {
-        // delegate to data service to load data
-        crewDataService.loadCrew()
-        launchesDataService.loadLaunches()
-        loadingStatus = .loading
+    func loadCrew(forceDownload: Bool = false) {
+        if lastDownload < Date(timeIntervalSinceNow: -200) || forceDownload {
+            // let data service load data
+            crewDataService.loadCrew()
+            launchesDataService.loadLaunches()
+            // manage loading status
+            loadingStatus = .loading
+            lastDownload = Date()
+        }
     }
     
     func launchesFor(crewMember: CrewMember) -> [Launch] {
@@ -38,38 +42,47 @@ class CrewViewModel: ObservableObject {
     private let launchesDataService: LaunchesDataServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     private var activeFiltersIds = Set<Int>()
+    private var lastDownload: Date = .distantPast
 
     // receive crew and launches
     private func addSubscribers() {
         crewDataService.crewPublisher
             .combineLatest(launchesDataService.launchesPublisher)
-            .sink {  [weak self] completion in
+            .sink { [weak self] completion in
                 if case .failure(let error) = completion {
                     self?.loadingStatus = .failed(error)
                 }
-            } receiveValue: { [weak self] crew, launches in
+            } receiveValue: { [weak self] crewResult, launchesResult in
                 guard let self else { return }
-                // store/update crew
-                self.coreDataManager.fetchOrCreateEntities(ofType: CrewMemberEntity.self, matchingData: crew) { entity, crewMember in
-                    crewMember.update(entity: entity)
+                if case .success(let crew) = crewResult, case .success(let launches) = launchesResult {
+                    // store/update crew
+                    self.coreDataManager.fetchOrCreateEntities(ofType: CrewMemberEntity.self, matchingData: crew) { entity, crewMember in
+                        crewMember.update(entity: entity)
+                    }
+                    // store/update launches
+                    self.coreDataManager.fetchOrCreateEntities(ofType: LaunchEntity.self, matchingData: launches) { entity, launch in
+                        launch.update(entity: entity)
+                    }
                 }
-                // store/update launches
-                self.coreDataManager.fetchOrCreateEntities(ofType: LaunchEntity.self, matchingData: launches) { entity, launch in
-                    launch.update(entity: entity)
-                }
-                // load crew and launches from DB
-                self.launches = self.coreDataManager
-                    .fetchEntities(ofType: LaunchEntity.self)
-                    .compactMap{ Launch(entity: $0) }
-                // update crew
-                self.crew = self.coreDataManager
-                    .fetchEntities(ofType: CrewMemberEntity.self)
-                    .compactMap{ CrewMember(entity: $0) }
-                    .sorted(by: { self.lastNameSorting(first: $0.name, second: $1.name) })
+                // fetch the data from DB
+                self.fetchData()
                 // update loading status
                 self.loadingStatus = .finished
             }
             .store(in: &cancellables)
+                
+    }
+    
+    private func fetchData() {
+        // load crew and launches from DB
+        self.launches = self.coreDataManager
+            .fetchEntities(ofType: LaunchEntity.self)
+            .compactMap{ Launch(entity: $0) }
+        // update crew
+        self.crew = self.coreDataManager
+            .fetchEntities(ofType: CrewMemberEntity.self)
+            .compactMap{ CrewMember(entity: $0) }
+            .sorted(by: { self.lastNameSorting(first: $0.name, second: $1.name) })
     }
     
     private func lastNameSorting(first: String, second: String) -> Bool {

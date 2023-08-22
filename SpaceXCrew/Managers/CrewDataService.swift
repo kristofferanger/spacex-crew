@@ -10,16 +10,16 @@ import Combine
 
 protocol CrewDataServiceProtocol {
     // subscribe vars
-    var crewPublisher: Published<[CrewMember]>.Publisher { get }
+    var crewPublisher: Published<Result<[CrewMember], Error>>.Publisher { get }
     // method to ask for updates
     func loadCrew()
 }
 
 class CrewDataService: CrewDataServiceProtocol {
     
-    @Published var crew: [CrewMember] = []
+    @Published var crew: Result<[CrewMember], Error> = .success([])
 
-    var crewPublisher: Published<[CrewMember]>.Publisher { $crew }
+    var crewPublisher: Published<Result<[CrewMember], Error>>.Publisher { $crew }
     
     private var crewSubscription: AnyCancellable?
     
@@ -33,8 +33,12 @@ class CrewDataService: CrewDataServiceProtocol {
         crewSubscription = NetworkingManager.download(url: url)
             .decode(type: [CrewMember].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] crew in
-                self?.crew = crew
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.crew = .failure(error)
+                }
+            }, receiveValue:{ [weak self] receiveValue in
+                self?.crew = .success(receiveValue)
                 self?.crewSubscription?.cancel()
             })
     }
