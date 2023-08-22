@@ -86,8 +86,8 @@ struct Launch: Codable, Identifiable {
     
     let id: String
     let name: String
-    let success: Bool
-    let rocket: String
+    let success: Bool?
+    let rocket: String?
     let details: String?
     let upcoming: Bool?
     let links: Links?
@@ -107,18 +107,16 @@ struct Launch: Codable, Identifiable {
 
 
 extension Launch {
-
     // demand that the non-optional properties
-    // is not nil, ie: id, name, success, rocket
+    // is not nil, ie: id, name
     // otherwise fail the init
     init?(entity: LaunchEntity) {
-        
-        guard let id = entity.id, let name = entity.name, let rocket = entity.rocket else { return nil }
+        guard let id = entity.id, let name = entity.name else { return nil }
         
         self.id = id
         self.name = name
+        self.rocket = entity.rocket
         self.success = entity.success
-        self.rocket = rocket
         self.details = nil
         self.upcoming = nil
         self.links = nil
@@ -126,7 +124,7 @@ extension Launch {
     
     func update(entity: LaunchEntity) {
         entity.rocket = self.rocket
-        entity.success = self.success
+        entity.success = self.success ?? false
         entity.name = self.name
         entity.id = self.id
     }

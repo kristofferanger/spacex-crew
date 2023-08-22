@@ -15,11 +15,7 @@ struct CrewList: View {
         NavigationStack {
             List {
                 ForEach(searchResults) { crewMember in
-                    NavigationLink {
-                        Text(crewMember.name)
-                    } label: {
-                        Text(crewMember.name)
-                    }
+                    crewCell(member: crewMember, missions: viewModel.launchesFor(crewMember: crewMember))
                 }
             }
             .onAppear{
@@ -47,6 +43,24 @@ struct CrewList: View {
             return viewModel.crew.filter { $0.name.lowercased().contains(searchText.lowercased()) || $0.agency.lowercased().contains(searchText.lowercased())
             }
         }
+    }
+    
+    func crewCell(member: CrewMember, missions: [Launch]) -> some View {
+        NavigationLink {
+            Text(member.name)
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(member.name)
+                HStack {
+                    Text(member.agency)
+                    Text("Missions: \(missions.filter{ $0.success == true }.count)")
+                }
+                .font(.caption)
+            }
+            
+        }
+        .padding(.vertical, 4)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

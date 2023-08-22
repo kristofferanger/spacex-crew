@@ -24,6 +24,7 @@ class CoreDataManager {
         context = container.viewContext
     }
     
+    // saving
     func save() {
         do {
             try context.save()
@@ -32,7 +33,8 @@ class CoreDataManager {
             print("Error saving to Core Data \(error.localizedDescription)")
         }
     }
-    
+
+    // helper methods for storing and updating data
     func fetchOrCreateEntities<Entity, IdentifiableCollection>(ofType type: Entity.Type, matchingData data: IdentifiableCollection, entityUpdate: (Entity, IdentifiableCollection.Element) -> Void) where Entity : NSManagedObject, IdentifiableCollection: Collection, IdentifiableCollection.Element: Identifiable {
         
         for element in data {
@@ -43,11 +45,8 @@ class CoreDataManager {
     }
     
     func fetchOrCreateEntity<Entity: NSManagedObject>(id: Any, ofType type: Entity.Type, entityUpdate: (Entity) -> Void) {
-        // make fetch request to get existing entity, ie item in DB
-        let request = NSFetchRequest<Entity>(entityName: type.description())
-        request.predicate = NSPredicate(format: "id == %@", "\(id)")
         // fetch or create
-        if let result = try? context.fetch(request), let storedEntity = result.first{
+        if let storedEntity = self.fetchEntity(id: id, ofType: type) {
             // return fetched entity for updating vars
             entityUpdate(storedEntity)
         }
@@ -57,5 +56,34 @@ class CoreDataManager {
         }
         // save entity
         save()
+    }
+    
+    // helper methods for fetching data
+    // make fetch request to get a specific entity
+    func fetchEntity<Entity: NSManagedObject>(id: Any, ofType type: Entity.Type) -> Entity? {
+        
+        let request = NSFetchRequest<Entity>(entityName: type.description())
+        request.predicate = NSPredicate(format: "id == %@", "\(id)")
+        do {
+            let result = try context.fetch(request)
+            return result.first
+        }
+        catch let error {
+            print("Error when fetching item of type: \(type.description()) with id: \(id) from Core Data: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    // make general fetch of a certain type
+    func fetchEntities<Entity: NSManagedObject>(ofType type: Entity.Type) -> [Entity] {
+        let request = NSFetchRequest<Entity>(entityName: type.description())
+        
+        do {
+            return try context.fetch(request)
+        }
+        catch let error {
+            print("Error when fetching item of type: \(type.description()) from Core Data: \(error.localizedDescription)")
+            return []
+        }
     }
 }

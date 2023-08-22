@@ -68,7 +68,7 @@ class NetworkingManager {
         case .finished:
             break
         case .failure(let error):
-            print(error.localizedDescription)
+            print("Error while loading: \(error.localizedDescription)")
         }
     }
 }
