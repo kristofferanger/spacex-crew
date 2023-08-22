@@ -11,8 +11,8 @@ struct ImageView: View {
     
     @StateObject var viewModel: ImageViewModel
     
-    init(crewMember: CrewMember) {
-        self._viewModel = StateObject(wrappedValue: ImageViewModel(member: crewMember))
+    init(url: String?) {
+        self._viewModel = StateObject(wrappedValue: ImageViewModel(url: url))
     }
     
     var body: some View {
@@ -34,6 +34,6 @@ struct ImageView: View {
 
 struct ImageView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageView(crewMember: MockDataService.crewMember())
+        ImageView(url: MockDataService.crewMember().image)
     }
 }

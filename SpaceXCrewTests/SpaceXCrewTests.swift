@@ -18,6 +18,17 @@ final class SpaceXCrewTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    func testStringCleaning() throws {
+        // the app uses url as image name by removing all
+        // characters that is not a letter or a number
+        let urlString = "https://imgur.com/ll7TlwD.png"
+        
+        let expectedValue = "httpsimgurcomll7TlwDpng"
+        let actualValue = urlString.onlyLettersAndNumbers()
+        // perform test
+        XCTAssertEqual(expectedValue, actualValue)
+    }
+    
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.

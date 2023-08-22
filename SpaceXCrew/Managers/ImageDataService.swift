@@ -14,14 +14,14 @@ class ImageDataService {
     @Published var image: UIImage? = nil
     
     private var imageSubscription: AnyCancellable?
-    private let member: CrewMember
     private let fileManager = LocalFileManager.instance
     private let folderName = "spacex_images"
     private let imageName: String
+    private let imageUrl: String?
     
-    init(member: CrewMember) {
-        self.member = member
-        self.imageName = member.id
+    init(url: String?) {
+        self.imageName = (url ?? "spacex").onlyLettersAndNumbers()
+        self.imageUrl = url
         getImage()
     }
     
@@ -34,10 +34,10 @@ class ImageDataService {
     }
     
     private func downloadImage() {
-        guard let image = member.image, let url = URL(string: image) else { return }
+        guard let imageUrl, let url = URL(string: imageUrl) else { return }
         
         imageSubscription = NetworkingManager.download(url: url)
-            .tryMap{ (data) -> UIImage? in
+            .tryMap{ data in
                 return UIImage(data: data)
             }
             .receive(on: DispatchQueue.main)

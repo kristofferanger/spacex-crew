@@ -14,13 +14,11 @@ class ImageViewModel: ObservableObject {
     @Published var image: UIImage? = nil
     @Published var isLoading: Bool = false
     
-    private let member: CrewMember
     private let dataService: ImageDataService
     private var cancellables = Set<AnyCancellable>()
     
-    init(member: CrewMember) {
-        self.member = member
-        self.dataService = ImageDataService(member: member)
+    init(url: String?) {
+        self.dataService = ImageDataService(url: url)
         self.addSubscribers()
         self.isLoading = true
     }
@@ -29,7 +27,7 @@ class ImageViewModel: ObservableObject {
         dataService.$image
             .sink { [weak self] (_) in
                 self?.isLoading = false
-            } receiveValue: { [weak self] (returnedImage) in
+            } receiveValue: { [weak self] returnedImage in
                 self?.image = returnedImage
             }
             .store(in: &cancellables)

@@ -14,21 +14,23 @@ struct CrewDetails: View {
     var body: some View {
         ScrollView {
             VStack() {
-                ImageView(crewMember: viewModel.crewMember)
+                ImageView(url: viewModel.crewMember.image)
                     .scaledToFill()
-                    .frame(maxWidth: .infinity)
                     .frame(height: 360)
                     .clipShape(Rectangle())
-                VStack(alignment: .leading) {
+                VStack() {
                     Text(viewModel.crewMember.agency)
                         .font(.headline)
-                    List(viewModel.launches) { launch in
-                        Text(launch.name)
+                    List {
+                        ForEach(viewModel.launches) { launch in
+                            Text(launch.name)
+                        }
                     }
                 }
                 .padding(.horizontal)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .navigationTitle(viewModel.crewMember.name)
     }
 }

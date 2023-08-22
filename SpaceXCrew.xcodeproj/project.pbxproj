@@ -31,6 +31,7 @@
 		C9CD09DE2A94AEF000EF20D9 /* CrewDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09DD2A94AEF000EF20D9 /* CrewDetails.swift */; };
 		C9CD09E02A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09DF2A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift */; };
 		C9CD09E22A94E6D100EF20D9 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09E12A94E6D100EF20D9 /* ImageView.swift */; };
+		C9CD09E42A94FF3800EF20D9 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09E32A94FF3800EF20D9 /* String+Additions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		C9CD09DD2A94AEF000EF20D9 /* CrewDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewDetails.swift; sourceTree = "<group>"; };
 		C9CD09DF2A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerWhileLoadingView.swift; sourceTree = "<group>"; };
 		C9CD09E12A94E6D100EF20D9 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		C9CD09E32A94FF3800EF20D9 /* String+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Additions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +216,7 @@
 		C99950662A92514E000D8EFA /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C9CD09E32A94FF3800EF20D9 /* String+Additions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -354,6 +357,7 @@
 				C99950682A9251B0000D8EFA /* CrewList.swift in Sources */,
 				C999506C2A9251D9000D8EFA /* CrewMember.swift in Sources */,
 				C999506D2A9251D9000D8EFA /* Launch.swift in Sources */,
+				C9CD09E42A94FF3800EF20D9 /* String+Additions.swift in Sources */,
 				C999506E2A9251D9000D8EFA /* Rocket.swift in Sources */,
 				C928085F2A9346E200B92836 /* CrewDataService.swift in Sources */,
 				C999507A2A92524D000D8EFA /* LaunchesDataService.swift in Sources */,
