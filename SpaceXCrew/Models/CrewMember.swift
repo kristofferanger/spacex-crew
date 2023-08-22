@@ -43,7 +43,10 @@ extension CrewMember {
     // is not nil, ie: id, name, agency, launches
     // otherwise fail the init
     init?(entity: CrewMemberEntity) {
-        guard let id = entity.id, let name = entity.name, let agency = entity.agency, let launches = entity.launches else { return nil }
+        guard let id = entity.id, let name = entity.name, let agency = entity.agency, let launches = entity.launches else {
+            print("Failed to init a crewMember!")
+            return nil
+        }
         self.id = id
         self.name = name
         self.agency = agency

@@ -24,7 +24,9 @@ struct CrewList: View {
                 return alert(error: $0)
             }
             .onAppear{
-                viewModel.loadCrew()
+                if viewModel.lastDownload < Date(timeIntervalSinceNow: -300) {
+                    viewModel.loadCrew()
+                }
             }
             .navigationTitle("Crew")
             .navigationBarItems(leading: logo, trailing: lightDarkSwitch)
@@ -33,15 +35,15 @@ struct CrewList: View {
         .preferredColorScheme(darkMode ? .dark : .light)
     }
     
-    func alert(error: Error) -> Alert {
+    private func alert(error: Error) -> Alert {
         let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {
             // try load items again on error dismiss
-            viewModel.loadCrew(forceDownload: true)
+            viewModel.loadCrew()
         })
         return alert
     }
-    
-    var lightDarkSwitch: some View {
+
+    private var lightDarkSwitch: some View {
         return Button {
             darkMode.toggle()
         } label: {
@@ -50,7 +52,7 @@ struct CrewList: View {
         .foregroundColor(Color("Inverted"))
     }
     
-    var logo: some View {
+    private var logo: some View {
         return Image("SpaceXLogo")
             .resizable()
             .aspectRatio(contentMode: .fit)
@@ -58,7 +60,7 @@ struct CrewList: View {
             .tint(Color("Inverted"))
     }
     
-    var searchResults: [CrewMember] {
+    private var searchResults: [CrewMember] {
         if searchText.isEmpty {
             return viewModel.crew
         }
@@ -68,14 +70,15 @@ struct CrewList: View {
         }
     }
     
-    func crewCell(member: CrewMember, missions: [Launch]) -> some View {
+    private func crewCell(member: CrewMember, missions: [Launch]) -> some View {
         NavigationLink {
-            CrewDetails(viewModel: CrewDetailsViewModel(crewMember: member))
+            CrewDetails(viewModel: CrewDetailsViewModel(crewMember: member, launches: missions))
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 Text(member.name)
+                    .font(.headline)
                 HStack {
-                    Text("\(member.agency), missions: \(missions.count)")
+                    Text("Missions: \(missions.count)")
                 }
                 .font(.caption)
             }

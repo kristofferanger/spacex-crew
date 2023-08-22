@@ -42,7 +42,10 @@ extension Launch {
     // is not nil, ie: id, name
     // otherwise fail the init
     init?(entity: LaunchEntity) {
-        guard let id = entity.id, let name = entity.name else { return nil }
+        guard let id = entity.id, let name = entity.name else {
+            print("Failed to init a launch!")
+            return nil
+        }
         
         self.id = id
         self.name = name

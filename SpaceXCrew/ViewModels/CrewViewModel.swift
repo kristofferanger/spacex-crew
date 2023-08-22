@@ -14,22 +14,22 @@ class CrewViewModel: ObservableObject {
     @Published var crew = [CrewMember]()
     @Published var launches = [Launch]()
     @Published var loadingStatus: LoadingStatus = .unknown
-        
+    
+    private(set) var lastDownload: Date = .distantPast
+
     init(crewDataService: CrewDataServiceProtocol, launchesDataService: LaunchesDataServiceProtocol) {
         self.crewDataService = crewDataService
         self.launchesDataService = launchesDataService
         addSubscribers()
     }
     
-    func loadCrew(forceDownload: Bool = false) {
-        if lastDownload < Date(timeIntervalSinceNow: -200) || forceDownload {
-            // let data service load data
-            crewDataService.loadCrew()
-            launchesDataService.loadLaunches()
-            // manage loading status
-            loadingStatus = .loading
-            lastDownload = Date()
-        }
+    func loadCrew() {
+        // let data service load data
+        crewDataService.loadCrew()
+        launchesDataService.loadLaunches()
+        // manage loading status
+        loadingStatus = .loading
+        lastDownload = Date()
     }
     
     func launchesFor(crewMember: CrewMember) -> [Launch] {
@@ -42,7 +42,6 @@ class CrewViewModel: ObservableObject {
     private let launchesDataService: LaunchesDataServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     private var activeFiltersIds = Set<Int>()
-    private var lastDownload: Date = .distantPast
 
     // receive crew and launches
     private func addSubscribers() {
@@ -70,7 +69,6 @@ class CrewViewModel: ObservableObject {
                 self.loadingStatus = .finished
             }
             .store(in: &cancellables)
-                
     }
     
     private func fetchData() {

@@ -56,6 +56,13 @@ extension MockDataService {
         let result = try! NetworkingManager.defaultDecoder().decode([CrewMember].self, from: data)
         return random ? result.randomElement()! : result.first!
     }
+    
+    static func launch(random: Bool = false) -> Launch {
+        let data = launchesJSON.data(using: String.Encoding.utf8, allowLossyConversion: false)!
+        let result = try! NetworkingManager.defaultDecoder().decode([Launch].self, from: data)
+        return random ? result.randomElement()! : result.first!
+    }
+    
 }
 
 // MARK: - JSON data

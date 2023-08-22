@@ -10,9 +10,11 @@ import Foundation
 class CrewDetailsViewModel: ObservableObject {
     
     @Published var crewMember: CrewMember
+    @Published var launches: [Launch]
     
-    init(crewMember: CrewMember) {
+    init(crewMember: CrewMember, launches: [Launch]) {
         self.crewMember = crewMember
+        self.launches = launches
     }
     
 }
