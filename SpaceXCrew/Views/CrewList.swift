@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct CrewList: View {
-    @StateObject private var viewModel = CrewViewModel(dataService: CrewDataService())
+    @StateObject var viewModel: CrewViewModel
     @State private var searchText = ""
+    @State private var darkMode = false
 
     var body: some View {
         NavigationStack {
@@ -22,9 +23,19 @@ struct CrewList: View {
                 viewModel.loadCrew()
             }
             .navigationTitle("Crew")
-            .navigationBarItems(leading: logo)
+            .navigationBarItems(leading: logo, trailing: lightDarkSwitch)
         }
         .searchable(text: $searchText)
+        .preferredColorScheme(darkMode ? .dark : .light)
+    }
+    
+    var lightDarkSwitch: some View {
+        return Button {
+            darkMode.toggle()
+        } label: {
+            Image(systemName: darkMode ? "sunrise.fill" : "sunset.fill")
+        }
+        .foregroundColor(Color("Inverted"))
     }
     
     var logo: some View {
@@ -47,17 +58,15 @@ struct CrewList: View {
     
     func crewCell(member: CrewMember, missions: [Launch]) -> some View {
         NavigationLink {
-            Text(member.name)
+            CrewDetails(viewModel: CrewDetailsViewModel(crewMember: member))
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 Text(member.name)
                 HStack {
-                    Text(member.agency)
-                    Text("Missions: \(missions.filter{ $0.success == true }.count)")
+                    Text("\(member.agency), missions: \(missions.count)")
                 }
                 .font(.caption)
             }
-            
         }
         .padding(.vertical, 4)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -65,7 +74,9 @@ struct CrewList: View {
 }
 
 struct CrewList_Previews: PreviewProvider {
+    static let launchesDataService = LaunchesDataService()
+    static let crewDataService = CrewDataService()
     static var previews: some View {
-        CrewList()
+        CrewList(viewModel: CrewViewModel(crewDataService: crewDataService, launchesDataService: launchesDataService))
     }
 }

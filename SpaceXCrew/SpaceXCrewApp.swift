@@ -10,8 +10,12 @@ import SwiftUI
 @main
 struct SpaceXCrewApp: App {
     var body: some Scene {
+        // current data services
+        let launchesDataService = LaunchesDataService()
+        let crewDataService = CrewDataService()
+        
         WindowGroup {
-            CrewList()
+            CrewList(viewModel: CrewViewModel(crewDataService: crewDataService, launchesDataService: launchesDataService))
         }
     }
 }

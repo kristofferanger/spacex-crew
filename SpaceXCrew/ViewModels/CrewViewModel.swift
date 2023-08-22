@@ -15,9 +15,9 @@ class CrewViewModel: ObservableObject {
     @Published var launches = [Launch]()
     @Published var loadingStatus: LoadingStatus = .unknown
         
-    init(dataService: CrewDataServiceProtocol) {
-        self.crewDataService = dataService
-        self.launchesDataService = LaunchesDataService()
+    init(crewDataService: CrewDataServiceProtocol, launchesDataService: LaunchesDataServiceProtocol) {
+        self.crewDataService = crewDataService
+        self.launchesDataService = launchesDataService
         addSubscribers()
     }
     
@@ -41,7 +41,8 @@ class CrewViewModel: ObservableObject {
 
     // receive crew and launches
     private func addSubscribers() {
-        crewDataService.crewPublisher.combineLatest(launchesDataService.launchesPublisher)
+        crewDataService.crewPublisher
+            .combineLatest(launchesDataService.launchesPublisher)
             .sink {  [weak self] completion in
                 if case .failure(let error) = completion {
                     self?.loadingStatus = .failed(error)
