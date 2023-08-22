@@ -29,6 +29,7 @@
 		C9CD09DA2A94AE6000EF20D9 /* CrewDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09D92A94AE6000EF20D9 /* CrewDetailsViewModel.swift */; };
 		C9CD09DC2A94AEC000EF20D9 /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09DB2A94AEC000EF20D9 /* ImageViewModel.swift */; };
 		C9CD09DE2A94AEF000EF20D9 /* CrewDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09DD2A94AEF000EF20D9 /* CrewDetails.swift */; };
+		C9CD09E02A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CD09DF2A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		C9CD09D92A94AE6000EF20D9 /* CrewDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewDetailsViewModel.swift; sourceTree = "<group>"; };
 		C9CD09DB2A94AEC000EF20D9 /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		C9CD09DD2A94AEF000EF20D9 /* CrewDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrewDetails.swift; sourceTree = "<group>"; };
+		C9CD09DF2A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerWhileLoadingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +179,7 @@
 			children = (
 				C99950672A9251B0000D8EFA /* CrewList.swift */,
 				C9CD09DD2A94AEF000EF20D9 /* CrewDetails.swift */,
+				C9CD09DF2A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9CD09D62A94A78B00EF20D9 /* ImageDataService.swift in Sources */,
+				C9CD09E02A94B3F400EF20D9 /* SpinnerWhileLoadingView.swift in Sources */,
 				C99950682A9251B0000D8EFA /* CrewList.swift in Sources */,
 				C999506C2A9251D9000D8EFA /* CrewMember.swift in Sources */,
 				C999506D2A9251D9000D8EFA /* Launch.swift in Sources */,

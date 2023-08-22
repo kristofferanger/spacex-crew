@@ -14,10 +14,14 @@ struct CrewList: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(searchResults) { crewMember in
-                    crewCell(member: crewMember, missions: viewModel.launchesFor(crewMember: crewMember))
+            SpinnerWhileLoadingView(viewModel.loadingStatus) {
+                List {
+                    ForEach(searchResults) { crewMember in
+                        crewCell(member: crewMember, missions: viewModel.launchesFor(crewMember: crewMember))
+                    }
                 }
+            } errorAlert: {
+                return alert(error: $0)
             }
             .onAppear{
                 viewModel.loadCrew()
@@ -27,6 +31,14 @@ struct CrewList: View {
         }
         .searchable(text: $searchText)
         .preferredColorScheme(darkMode ? .dark : .light)
+    }
+    
+    func alert(error: Error) -> Alert {
+        let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {
+            // try load items again on error dismiss
+            viewModel.loadCrew()
+        })
+        return alert
     }
     
     var lightDarkSwitch: some View {
